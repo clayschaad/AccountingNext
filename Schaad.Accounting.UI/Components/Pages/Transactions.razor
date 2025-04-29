@@ -1,0 +1,53 @@
+﻿@page "/transactions"
+@rendermode InteractiveServer
+
+<PageTitle>Transaktionen</PageTitle>
+
+<FluentStack Orientation="Orientation.Horizontal" Width="100%">
+    <FluentNavMenu Width="700">
+        @foreach (var gr in accounts.GroupBy(a => a.ClassName))
+        {
+            <FluentNavGroup Title="@(gr.Key)" Expanded="true">
+                @foreach (var account in gr)
+                {
+                    <FluentNavLink OnClick="() => ShowTransactions(account.Id)" Icon="@(new Icons.Regular.Size24.CalendarAgenda())">
+                        <FluentStack Orientation="Orientation.Horizontal">
+                            <div>
+                                @account.Number / @account.Name
+                            </div>
+                            <div style="margin-left: auto;">
+                                <FluentBadge Appearance="Appearance.Neutral">
+                                    @account.BalanceCHF.ToString("C2")
+                                </FluentBadge>
+                            </div>
+                        </FluentStack>
+                    
+                    </FluentNavLink>
+                }
+            </FluentNavGroup>
+        }
+    </FluentNavMenu>
+    
+    <FluentBodyContent>
+        <FluentPaginator State="@pagination" SummaryTemplate="@template" />
+
+        <FluentDataGrid Items="@transactionList" Pagination="@pagination">
+            <PropertyColumn Property="@(p => p.BookingDate)" Format="dd.MM.yyyy" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Descending" />
+            <PropertyColumn Property="@(p => p.ValueDate)" Format="dd.MM.yyyy" Sortable="true" />
+            <PropertyColumn Property="@(p => p.Text)" />
+            <TemplateColumn Title="Gegenkonto">
+                @GetAccountName(context)
+            </TemplateColumn>
+            <PropertyColumn Property="@(p => p.Value)" Format="C2" Align="Align.End"/>
+            
+
+        </FluentDataGrid>
+    </FluentBodyContent>
+
+</FluentStack>
+
+@code
+{
+    private RenderFragment template = @<span />;
+    PaginationState pagination = new PaginationState() { ItemsPerPage = 20 };
+}

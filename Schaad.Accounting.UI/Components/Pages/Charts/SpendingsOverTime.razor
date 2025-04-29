@@ -1,0 +1,6 @@
+﻿@page "/SpendingsOverTime"
+@rendermode InteractiveServer
+
+<PageTitle>Ausgaben im Verlauf</PageTitle>
+
+<PlotlyChart style="height: 700px; min-height: 500px" @bind-Config="config" @bind-Layout="layout" @bind-Data="data" @ref="chart" />

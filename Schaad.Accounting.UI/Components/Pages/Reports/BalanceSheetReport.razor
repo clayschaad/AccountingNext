@@ -1,0 +1,76 @@
+﻿@page "/BalanceSheetReport"
+
+<h3>@header</h3>
+<a href="javascript:window.print()" class="hidePrint">Print</a>
+<br />
+<br />
+<table class="report">
+    <tbody>
+        <tr>
+            <td colspan="3" class="header">Einnahmen</td>
+        </tr>
+        <tr>
+            <td colspan="3"><hr /></td>
+        </tr>
+        @foreach (var account in balanceSheet.ActivaAccountList.OrderBy(m => m.Number))
+        {
+            @if (account.StartBalanceCHF == 0) { continue; }
+
+            <tr>
+                <td>@account.Number</td>
+                <td>Vortrag von @(balanceSheet.Year - 1) / @account.Name</td>
+                <td class="right">@Math.Abs(account.StartBalanceCHF).ToFormattedString()</td>
+            </tr>
+        }
+        @foreach (var account in balanceSheet.IncomeAccountList.OrderBy(m => m.Number))
+        {
+            @if (account.BalanceCHF == 0) { continue; }
+
+            <tr>
+                <td>@account.Number</td>
+                <td>@account.Name</td>
+                <td class="right">@Math.Abs(account.BalanceCHF).ToFormattedString()</td>
+            </tr>
+        }
+        <tr>
+            <td colspan="3"><hr /></td>
+        </tr>
+        <tr>
+            <td colspan="3" class="header">Ausgaben</td>
+        </tr>
+        <tr>
+            <td colspan="3"><hr /></td>
+        </tr>
+        @foreach (var account in balanceSheet.ExpensesAccountList.OrderBy(m => m.Number))
+        {
+            @if (account.BalanceCHF == 0) { continue; }
+
+            <tr>
+                <td>@account.Number</td>
+                <td>@account.Name</td>
+                <td class="right">@account.BalanceCHF.ToFormattedString()</td>
+            </tr>
+        }
+        <tr>
+            <td colspan="3"><hr /></td>
+        </tr>
+        <tr>
+            <td colspan="2">Total Einnahmen</td>
+            <td class="right">@balanceSheet.ProfitCHF.ToFormattedString()</td>
+        </tr>
+        <tr>
+            <td colspan="2">Total Ausgaben</td>
+            <td class="right sum">-@balanceSheet.LossCHF.ToFormattedString()</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="total">Übertrag @(balanceSheet.Year + 1)</td>
+            <td class="right total sum">CHF @win.ToFormattedString()</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="height: 30px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="4" class="footer">@footer</td>
+        </tr>
+    </tbody>
+</table>

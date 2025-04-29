@@ -1,0 +1,30 @@
+﻿@page "/Accounts"
+@rendermode InteractiveServer
+
+<PageTitle>Konten</PageTitle>
+
+<FluentButton IconStart="@(new Icons.Regular.Size16.Add())" Appearance="Appearance.Neutral" OnClick="AddAsync">Neues Konto hinzufügen</FluentButton>
+<FluentPaginator State="@pagination" SummaryTemplate="@template" />
+
+<FluentDataGrid Items="@accountQueryable" Pagination="@pagination" RowSize="DataGridRowSize.Medium">
+    <PropertyColumn Property="@(p => p.Class)" Sortable="true"  Width="100px" />
+    <PropertyColumn Property="@(p => p.SubClass)" Sortable="true" Width="140px" />
+    <PropertyColumn Property="@(p => p.Number)" Sortable="true" IsDefaultSortColumn="true" Width="140px" />
+    <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.Currency)" />
+    <PropertyColumn Property="@(p => p.BankAccountNumber)" />
+    <PropertyColumn Property="@(p => p.StartBalance)" Format="C2"/>
+    <PropertyColumn Property="@(p => p.LastBankBalance)" Format="C2" />
+    <TemplateColumn Align="Align.Center" Width="50px">
+        <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())" Appearance="Appearance.Neutral" OnClick="@(() => DeleteAsync(context.Id))" />
+    </TemplateColumn>
+    <TemplateColumn Align="Align.Center" Width="50px">
+        <FluentButton IconEnd="@(new Icons.Regular.Size16.Edit())" Appearance="Appearance.Neutral" OnClick="@(() => EditAsync(context.Id))" />
+    </TemplateColumn>
+</FluentDataGrid>
+
+@code
+{
+    private RenderFragment template = @<span />;
+    PaginationState pagination = new PaginationState() { ItemsPerPage = 20 };
+}

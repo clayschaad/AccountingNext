@@ -52,3 +52,7 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+/AccountingWeb/.vs
+/.vs/Accounting
+/.vs/ProjectEvaluation
+/Schaad.Accounting.UI/.vs

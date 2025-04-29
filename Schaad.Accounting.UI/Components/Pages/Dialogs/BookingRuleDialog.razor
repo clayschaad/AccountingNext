@@ -1,0 +1,46 @@
+﻿@using Schaad.Accounting.Models
+@implements IDialogContentComponent<Schaad.Accounting.Models.BookingRule>
+@rendermode InteractiveServer
+
+<FluentDialogHeader ShowDismiss="true">
+    <FluentStack VerticalAlignment="VerticalAlignment.Center">
+        <FluentIcon Value="@(new Icons.Regular.Size24.WindowApps())" />
+        <FluentLabel Typo="Typography.PaneHeader">
+            @Dialog.Instance.Parameters.Title
+        </FluentLabel>
+    </FluentStack>
+</FluentDialogHeader>
+
+<FluentDialogBody>
+    <EditForm EditContext="@editContext">
+        <DataAnnotationsValidator />
+        <FluentTextField @bind-Value="@Content.LookupText" Label="Suchtext" Style="width: 300px;"/>
+        <FluentNumberField @bind-Value="@Content.LookupValue" Label="Suchbetrag" Style="width: 300px;"/>
+        <FluentTextField @bind-Value="@Content.BookingText" Label="Buchungstext" Style="width: 300px;" />
+        <FluentSelect TOption="Account"
+                      Label="Konto"
+                      Items="@accounts"
+                      Width="300px"
+                      Height="250px"
+                      Required="true"
+                      Placeholder="Konto auswählen..."
+                      OptionValue="@(p => p.Id)"
+                      OptionText="@(p => p.Number + " / " + p.Name)"
+                      @bind-Value="@Content.AccountId" />
+
+        <div>
+            <FluentValidationSummary />
+        </div>
+    </EditForm>
+</FluentDialogBody>
+
+<FluentDialogFooter>
+    <FluentButton Appearance="Appearance.Neutral"
+                  OnClick="@CancelAsync">
+        Abbrechen
+    </FluentButton>
+    <FluentButton Appearance="Appearance.Accent"
+                  OnClick="@SaveAsync">
+        Speichern
+    </FluentButton>
+</FluentDialogFooter>

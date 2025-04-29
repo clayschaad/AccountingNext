@@ -1,0 +1,24 @@
+﻿@page "/Classes"
+@rendermode InteractiveServer
+
+<PageTitle>Klassen</PageTitle>
+
+<FluentButton IconStart="@(new Icons.Regular.Size16.Add())" Appearance="Appearance.Neutral" OnClick="AddAsync">Neue Klasse hinzufügen</FluentButton>
+<FluentPaginator State="@pagination" SummaryTemplate="@template" />
+
+<FluentDataGrid Items="@subclassQueryable" Pagination="@pagination" RowSize="DataGridRowSize.Medium">
+    <PropertyColumn Property="@(p => p.Number)" Sortable="true" IsDefaultSortColumn="true" Width="200px" />
+    <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
+    <TemplateColumn Align="Align.Center" Width="50px">
+        <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())" Appearance="Appearance.Neutral" OnClick="@(() => DeleteAsync(context.Id))" />
+    </TemplateColumn>
+    <TemplateColumn Align="Align.Center" Width="50px">
+        <FluentButton IconEnd="@(new Icons.Regular.Size16.Edit())" Appearance="Appearance.Neutral" OnClick="@(() => EditAsync(context.Id))" />
+    </TemplateColumn>
+</FluentDataGrid>
+
+@code
+{
+    private RenderFragment template = @<span />;
+    PaginationState pagination = new PaginationState() { ItemsPerPage = 20 };
+}

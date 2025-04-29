@@ -1,0 +1,99 @@
+﻿@page "/BalanceReport"
+
+<h3>@header</h3>
+<a href="javascript:window.print()" class="hidePrint">Print</a>
+
+<br />
+<br />
+<table class="report">
+    <thead>
+        <tr>
+            <th>Konto</th>
+            <th>Bezeichnung</th>
+            <th class="right">Aktiven</th>
+            <th class="right">Passiven</th>
+        </tr>
+        <tr>
+            <th colspan="4"><hr /></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td colspan="4" class="header">Aktiven</td>
+        </tr>
+        <tr>
+            <td colspan="4"><hr /></td>
+        </tr>
+        @foreach (var account in balance.ActivaAccountList.OrderBy(m => m.Number))
+        {
+            @if (account.BalanceCHF == 0) { continue; }
+
+            <tr>
+                <td>@account.Number</td>
+                <td>@account.Name</td>
+                <td class="right">@Math.Abs(account.BalanceCHF).ToFormattedString()</td>
+                <td></td>
+            </tr>
+        }
+        <tr>
+            <td colspan="4"><hr /></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="total">Total Aktiven</td>
+            <td class="right total">CHF @balance.TotalActivaCHF.ToFormattedString()</td>
+            <td></td>
+        </tr>
+        <tr>
+            <td colspan="4"><hr /></td>
+        </tr>
+        <tr>
+            <td colspan="4" class="header">Passiven</td>
+        </tr>
+        <tr>
+            <td colspan="4"><hr /></td>
+        </tr>
+        @foreach (var account in balance.PassivaAccountList.OrderBy(m => m.Number))
+        {
+            @if (account.BalanceCHF == 0) { continue; }
+
+            <tr>
+                <td>@account.Number</td>
+                <td>@account.Name</td>
+                <td></td>
+                <td class="right">@Math.Abs(account.BalanceCHF).ToFormattedString()</td>
+            </tr>
+        }
+        <tr>
+            <td colspan="4"><hr /></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="total">Total Passiven</td>
+            <td></td>
+            <td class="right total">@balance.TotalPassivaCHF.ToFormattedString()</td>
+        </tr>
+        <tr>
+            <td colspan="4"><hr /></td>
+        </tr>
+        <tr>
+            <td colspan="2" class="total">Total</td>
+            <td class="right">@balance.TotalActivaCHF.ToFormattedString()</td>
+            <td class="right">@balance.TotalPassivaCHF.ToFormattedString()</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="total">Eigenkapital</td>
+            <td class="right sum"></td>
+            <td class="right sum">@win.ToFormattedString()</td>
+        </tr>
+        <tr>
+            <td colspan="2" class="total">Bilanzsumme</td>
+            <td class="right total sum">CHF @balance.TotalActivaCHF.ToFormattedString()</td>
+            <td class="right total sum">CHF @((balance.TotalPassivaCHF + win).ToFormattedString())</td>
+        </tr>
+        <tr>
+            <td colspan="4" style="height: 30px">&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="4" class="footer">@footer</td>
+        </tr>
+    </tbody>
+</table>

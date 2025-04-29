@@ -1,0 +1,35 @@
+﻿@using Microsoft.FluentUI.AspNetCore.Components.Icons.Regular
+@rendermode InteractiveServer
+
+<!-- https://www.fluentui-blazor.net/Icon#explorer -->
+
+<div class="navmenu hidePrint">
+    <nav class="sitenav" aria-labelledby="main-menu">
+        <FluentNavMenu Id="main-menu" Collapsible="true" Width="250" Title="Navigation menu" @bind-Expanded="expanded" CustomToggle="true">
+            <FluentNavLink Href="/" Match="NavLinkMatch.All" Icon="@(new Size20.Home())" IconColor="Color.Accent">Home</FluentNavLink>
+            <FluentNavLink Href="transactions" Icon="@(new Size20.NumberSymbolSquare())" IconColor="Color.Accent">Transaktionen</FluentNavLink>
+            <FluentNavLink Href="banktransactions" Icon="@(new Size20.BuildingBank())" IconColor="Color.Accent">Bank Transaktionen</FluentNavLink>
+            <FluentNavGroup Title="Stammdaten" Icon="@(new Size32.BookDatabase())">
+                <FluentNavLink Href="bookingrules" Icon="@(new Size20.Check())" IconColor="Color.Accent">Buchungsregeln</FluentNavLink>
+                <FluentNavLink Href="bookingtexts" Icon="@(new Size32.Text())" IconColor="Color.Accent">Buchungstexte</FluentNavLink>
+                <FluentNavLink Href="Classes" Icon="@(new Icons.Filled.Size20.Class())" IconColor="Color.Accent">Klassen</FluentNavLink>
+                <FluentNavLink Href="Accounts" Icon="@(new Size20.PersonAccounts())" IconColor="Color.Accent">Konten</FluentNavLink>
+            </FluentNavGroup>
+            <FluentNavGroup Title="Charts" Icon="@(new Size32.ChartMultiple())">
+                <FluentNavLink Href="spendings" Icon="@(new Size32.DataPie())" IconColor="Color.Accent">Ausgaben</FluentNavLink>
+                <FluentNavLink Href="SpendingsOverTime" Icon="@(new Size32.DataArea())" IconColor="Color.Accent">Zeitverlauf</FluentNavLink>
+                <FluentNavLink Href="Assets" Icon="@(new Size32.DataPie())" IconColor="Color.Accent">Vermögen</FluentNavLink>
+            </FluentNavGroup>
+            <FluentNavGroup Title="Reports" Icon="@(new Size32.DocumentPrint())">
+                <FluentNavLink Href="ProfitLossReport" Icon="@(new Size32.DataTrending())" IconColor="Color.Accent">Erfolgsrechnung</FluentNavLink>
+                <FluentNavLink Href="DetailReport" Icon="@(new Size32.Feed())" IconColor="Color.Accent">Detailaufstellung</FluentNavLink>
+                <FluentNavLink Href="BalanceReport" Icon="@(new Size32.Feed())" IconColor="Color.Accent">Bilanz</FluentNavLink>
+                <FluentNavLink Href="BalanceSheetReport" Icon="@(new Size32.Receipt())" IconColor="Color.Accent">Jahresabschluss</FluentNavLink>
+            </FluentNavGroup>
+        </FluentNavMenu>
+    </nav>
+</div>
+
+@code {
+    private bool expanded = true;
+}
