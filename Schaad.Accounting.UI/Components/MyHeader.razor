@@ -1,0 +1,17 @@
+﻿@rendermode InteractiveServer
+
+AccountingNext
+
+<FluentStack Orientation="Orientation.Horizontal" HorizontalAlignment="HorizontalAlignment.Right">
+    <FluentSelect TOption="int"
+                  Items=@years
+                  OptionText="@(i => i.ToString())"
+                  OptionValue="@(i => i.ToString())"
+                  @bind-SelectedOption="@selectedYear"
+                  ValueChanged="YearChanged" />
+    
+</FluentStack>
+
+@code {
+    
+}
