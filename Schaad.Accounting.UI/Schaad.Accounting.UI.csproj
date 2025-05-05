@@ -27,4 +27,9 @@
     <PackageReference Include="Plotly.Blazor" Version="6.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="Components\Pages\Transactions.razor.css" />
+    <Content Include="Components\Pages\Transactions.razor.css" />
+  </ItemGroup>
+
 </Project>

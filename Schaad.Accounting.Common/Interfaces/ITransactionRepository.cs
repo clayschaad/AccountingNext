@@ -10,5 +10,6 @@ namespace Schaad.Accounting.Interfaces
         void SaveTransaction(Transaction transaction);
 
         Transaction GetTransaction(string id);
+        void DeleteTransaction(string id);
     }
 }

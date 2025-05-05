@@ -136,8 +136,7 @@ namespace Schaad.Accounting.Services
                         new TransactionDataset(
                             t,
                             accountList.Single(a => a.Id == t.OriginAccountId),
-                            accountList.Single(a => a.Id == t.TargetAccountId)
-                        )
+                            accountList.Single(a => a.Id == t.TargetAccountId))
                 )
                 .ToList();
 
@@ -155,7 +154,7 @@ namespace Schaad.Accounting.Services
             var transactionViewList = transactionList.Select(
                     t =>
                         new TransactionDataset(
-                            t,
+                            Prepare(t),
                             accountList.Single(a => a.Id == t.OriginAccountId),
                             accountList.Single(a => a.Id == t.TargetAccountId)
                         )
@@ -163,6 +162,18 @@ namespace Schaad.Accounting.Services
                 .ToList();
 
             return transactionViewList;
+
+            Transaction Prepare(Transaction t)
+            {
+                var account = accountList.Single(a => a.Id == t.OriginAccountId);
+                
+                if (account.Class == ClassIds.Activa && accountId == t.OriginAccountId )
+                {
+                    return t with { Value = -t.Value };
+                }
+    
+                return t;
+            }
         }
 
 

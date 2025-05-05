@@ -1,0 +1,56 @@
+﻿@using Schaad.Accounting.Models
+@implements IDialogContentComponent<Schaad.Accounting.Models.Transaction>
+@rendermode InteractiveServer
+
+<FluentDialogHeader ShowDismiss="true">
+    <FluentStack VerticalAlignment="VerticalAlignment.Center">
+        <FluentIcon Value="@(new Icons.Regular.Size24.WindowApps())" />
+        <FluentLabel Typo="Typography.PaneHeader">
+            @Dialog.Instance.Parameters.Title
+        </FluentLabel>
+    </FluentStack>
+</FluentDialogHeader>
+
+<FluentDialogBody>
+    <EditForm EditContext="@editContext">
+        <DataAnnotationsValidator />
+        <FluentDatePicker @bind-Value="@SelectedValue" Label="Valuta" Style="width: 300px;"/>
+        <FluentSelect TOption="Account"
+                      Label="von"
+                      Items="@accounts"
+                      Width="300px"
+                      Height="250px"
+                      Required="true"
+                      Placeholder="Konto auswählen..."
+                      OptionValue="@(p => p.Id)"
+                      OptionText="@(p => p.Number + " / " + p.Name)"
+                      @bind-Value="@Content.OriginAccountId" />
+        <FluentSelect TOption="Account"
+                      Label="nach"
+                      Items="@accounts"
+                      Width="300px"
+                      Height="250px"
+                      Required="true"
+                      Placeholder="Konto auswählen..."
+                      OptionValue="@(p => p.Id)"
+                      OptionText="@(p => p.Number + " / " + p.Name)"
+                      @bind-Value="@Content.TargetAccountId" />
+        <FluentNumberField @bind-Value="@Content.Value" Label="Betrag" Style="width: 300px;"/>
+        <FluentTextField @bind-Value="@Content.Text" Label="Buchungstext" Style="width: 300px;" />
+
+        <div>
+            <FluentValidationSummary />
+        </div>
+    </EditForm>
+</FluentDialogBody>
+
+<FluentDialogFooter>
+    <FluentButton Appearance="Appearance.Neutral"
+                  OnClick="@CancelAsync">
+        Abbrechen
+    </FluentButton>
+    <FluentButton Appearance="Appearance.Accent"
+                  OnClick="@SaveAsync">
+        Speichern
+    </FluentButton>
+</FluentDialogFooter>

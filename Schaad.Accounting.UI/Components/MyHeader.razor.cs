@@ -12,7 +12,7 @@ public partial class MyHeader : ComponentBase
     private int selectedYear;
     
     private List<string> mandators = new ();
-    private string selectedMandator;
+    private string selectedMandator = null!;
     
     protected override Task OnInitializedAsync()  
     {  

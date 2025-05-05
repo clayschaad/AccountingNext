@@ -76,5 +76,15 @@ namespace Schaad.Accounting.Repositories
 
             return transaction;
         }
+        
+        /// <summary>
+        /// Delete transaction
+        /// </summary>
+        public void DeleteTransaction(string id)
+        {
+            var transactions = GetTransactionList();
+            transactions.RemoveAll(t => t.Id == id);
+            Save(transactions, TRANSACTIONS);
+        }
     }
 }

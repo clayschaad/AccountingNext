@@ -17,7 +17,7 @@
                             </div>
                             <div style="margin-left: auto;">
                                 <FluentBadge Appearance="Appearance.Neutral">
-                                    @account.BalanceCHF.ToString("C2")
+                                    @Math.Abs(account.BalanceCHF).ToString("C2")
                                 </FluentBadge>
                             </div>
                         </FluentStack>
@@ -29,21 +29,35 @@
     </FluentNavMenu>
     
     <FluentBodyContent>
-        <FluentPaginator State="@pagination" SummaryTemplate="@template" />
-
-        <FluentDataGrid Items="@transactionList" Pagination="@pagination">
-            <PropertyColumn Property="@(p => p.BookingDate)" Format="dd.MM.yyyy" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Descending" />
-            <PropertyColumn Property="@(p => p.ValueDate)" Format="dd.MM.yyyy" Sortable="true" />
-            <PropertyColumn Property="@(p => p.Text)" />
+        <FluentGrid Justify="JustifyContent.FlexStart">
+            <FluentGridItem xs="4" Class="align-content-center title">
+                @selectedAccount.Name
+            </FluentGridItem>
+            <FluentGridItem xs="4" Class="align-content-center">
+                Total @Math.Abs(selectedAccount.Balance).ToString("C2") in @transactionList?.Count() Transaktionen
+            </FluentGridItem>
+            <FluentGridItem xs="4" Class="align-content-center" Justify="JustifyContent.FlexEnd">
+                <FluentButton IconStart="@(new Icons.Regular.Size16.Add())" Appearance="Appearance.Neutral" OnClick="AddAsync">Neue Transaktion hinzufügen</FluentButton>
+            </FluentGridItem>
+        </FluentGrid>
+        
+        <FluentPaginator State="@pagination" SummaryTemplate="@template"/>
+        <FluentDataGrid Items="@transactionList" Pagination="@pagination" RowSize="DataGridRowSize.Medium">
+            <PropertyColumn Property="@(p => p.BookingDate)" Format="dd.MM.yyyy" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Descending"/>
+            <PropertyColumn Property="@(p => p.ValueDate)" Format="dd.MM.yyyy" Sortable="true"/>
+            <PropertyColumn Property="@(p => p.Text)"/>
             <TemplateColumn Title="Gegenkonto">
                 @GetAccountName(context)
             </TemplateColumn>
             <PropertyColumn Property="@(p => p.Value)" Format="C2" Align="Align.End"/>
-            
-
+            <TemplateColumn Align="Align.Center" Width="50px">
+                <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())" Appearance="Appearance.Neutral" OnClick="@(() => DeleteAsync(context.Id))"/>
+            </TemplateColumn>
+            <TemplateColumn Align="Align.Center" Width="50px">
+                <FluentButton IconEnd="@(new Icons.Regular.Size16.Edit())" Appearance="Appearance.Neutral" OnClick="@(() => EditAsync(context.Id))"/>
+            </TemplateColumn>
         </FluentDataGrid>
     </FluentBodyContent>
-
 </FluentStack>
 
 @code

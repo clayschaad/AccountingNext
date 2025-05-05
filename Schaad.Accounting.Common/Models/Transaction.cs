@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Schaad.Accounting.Models
 {
-    public class Transaction
+    public record Transaction
     {
         public string Id { get; set; }
         public string BankTransactionId { get; set; }
@@ -18,21 +18,26 @@ namespace Schaad.Accounting.Models
         public string RelatedParty { get; set; }
 
         [Display(Name = "Valuta")]
+        [Required]
         public DateTime ValueDate { get; set; }
 
         [Display(Name = "Buchung")]
         public DateTime BookingDate { get; set; }
 
         [Display(Name = "Buchungstext")]
+        [Required]
         public string Text { get; set; }
 
         [Display(Name = "Betrag")]
+        [Required]
         public decimal Value { get; set; }
 
         [Display(Name = "Habenkonto")]
+        [Required]
         public string OriginAccountId { get; set; }
 
         [Display(Name = "Sollkonto")]
+        [Required]
         public string TargetAccountId { get; set; }
 
         [Display(Name = "Währungskurs")]
