@@ -11,21 +11,33 @@ public partial class MyHeader : ComponentBase
     private List<int> years = new ();
     private int selectedYear;
     
+    private List<string> mandators = new ();
+    private string selectedMandator;
+    
     protected override Task OnInitializedAsync()  
     {  
         for (var year = DateTime.Now.Year; year >= 2015; year--)
         {
             years.Add(year);
         }
-
+        
         selectedYear = settingsService.GetYear();
+
+        mandators = settingsService.GetMandators(selectedYear).ToList();
+        selectedMandator = settingsService.GetMandator();
         
         return base.OnInitializedAsync();  
     }
     
-    public void YearChanged(string obj)
+    public void YearChanged(string syear)
     {
-        settingsService.SetYear(int.Parse(obj));
+        var year = int.Parse(syear);
+        settingsService.SetYear(year);
+        mandators = settingsService.GetMandators(year).ToList();
     }
-
+    
+    public void MandatorChanged(string mandator)
+    {
+        settingsService.SetMandator(mandator);
+    }
 }

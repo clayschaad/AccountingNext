@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Schaad.Accounting.Datasets;
@@ -42,6 +43,12 @@ namespace Schaad.Accounting.Services
         public string GetMandator()
         {
             return mandator;
+        }
+        
+        public IReadOnlyList<string> GetMandators(int year)
+        {
+            var path = Path.Combine(GetSettings().DataPath, year.ToString());
+            return Directory.GetDirectories(path).Select(Path.GetFileName).Where(d => !d.Equals("Backup", StringComparison.InvariantCultureIgnoreCase)).ToList();
         }
 
         public void SetMandator(string mandator)

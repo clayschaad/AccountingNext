@@ -8,8 +8,14 @@ AccountingNext
                   OptionText="@(i => i.ToString())"
                   OptionValue="@(i => i.ToString())"
                   @bind-SelectedOption="@selectedYear"
-                  ValueChanged="YearChanged" />
+                  ValueChanged="YearChanged"/>
     
+    <FluentSelect TOption="string"
+                  Items=@mandators
+                  OptionText="@(i => i.ToString())"
+                  OptionValue="@(i => i.ToString())"
+                  @bind-SelectedOption="@selectedMandator"
+                  ValueChanged="MandatorChanged"/>
 </FluentStack>
 
 @code {

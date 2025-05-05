@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Schaad.Accounting.Datasets;
 
 namespace Schaad.Accounting.Interfaces
@@ -11,6 +12,7 @@ namespace Schaad.Accounting.Interfaces
         bool TrySetYear(int year);
 
         string GetMandator();
+        IReadOnlyList<string> GetMandators(int year);
 
         void SetMandator(string mandator);
 
