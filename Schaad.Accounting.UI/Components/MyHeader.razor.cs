@@ -8,6 +8,9 @@ public partial class MyHeader : ComponentBase
     [Inject]
     private ISettingsService settingsService { get; set; } = null!;
     
+    [Inject]
+    NavigationManager navigationManager { get; set; } = null!;
+    
     private List<int> years = new ();
     private int selectedYear;
     
@@ -32,12 +35,20 @@ public partial class MyHeader : ComponentBase
     public void YearChanged(string syear)
     {
         var year = int.Parse(syear);
-        settingsService.SetYear(year);
-        mandators = settingsService.GetMandators(year).ToList();
+        if (selectedYear != year)
+        {
+            settingsService.SetYear(year);
+            mandators = settingsService.GetMandators(year).ToList();
+            navigationManager.NavigateTo(navigationManager.Uri, forceLoad: true);
+        }
     }
     
     public void MandatorChanged(string mandator)
     {
-        settingsService.SetMandator(mandator);
+        if (selectedMandator != mandator)
+        {
+            settingsService.SetMandator(mandator);
+            navigationManager.NavigateTo(navigationManager.Uri, forceLoad: true);
+        }
     }
 }

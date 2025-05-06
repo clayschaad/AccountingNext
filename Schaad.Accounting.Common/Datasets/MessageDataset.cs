@@ -25,18 +25,6 @@ namespace Schaad.Accounting.Datasets
                 Status = status;
             }
         }
-
-        public string GetCssAlertClass()
-        {
-            switch (Status)
-            {
-                case MessageStatus.Success: return "alert-success";
-                case MessageStatus.Info: return "alert-info";
-                case MessageStatus.Warning: return "alert-warning";
-                case MessageStatus.Error: return "alert-danger";
-                default: return "alert-success";
-            }
-        }
     }
 
     public enum MessageStatus

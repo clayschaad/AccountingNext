@@ -1,7 +1,44 @@
 ﻿@page "/"
-<h3>Home</h3>
+@rendermode InteractiveServer
 
-@foreach (var bankTransaction in bankTransactions)
-{
-    <p>@bankTransaction.BankAccountNumber</p>
-}
+<PageTitle>Home</PageTitle>
+
+<FluentInputFile @ref="@myFileByBuffer"
+                 AnchorId="MyUploadBuffer"
+                 DragDropZoneVisible="false"
+                 Mode="InputFileMode.Buffer"
+                 Multiple="true"
+                 MaximumFileSize="@(10 * 1024 * 1024)"
+                 Accept=".zip, .xml"
+                 OnProgressChange="@OnProgressChangeAsync"
+                 OnCompleted="@OnCompletedAsync" />
+
+<FluentProgress Visible="@(progressPercent > 0)" Min="0" Max="100" Value="@progressPercent" />
+<FluentLabel Alignment="HorizontalAlignment.Center">
+    @progressTitle
+</FluentLabel>
+
+<FluentButton Appearance="Appearance.Lightweight" IconStart="@(new Icons.Regular.Size16.ArrowUpload())" Id="MyUploadBuffer">
+    Upload files
+</FluentButton>
+
+<FluentButton Appearance="Appearance.Lightweight" IconStart="@(new Icons.Regular.Size16.Dismiss())" @onclick="@((e) => IsCanceled = true)">
+    Cancel
+</FluentButton>
+
+<div id="datagrid-container">
+    <FluentDataGrid Items="@bankTransactionsQueryable" RowSize="DataGridRowSize.Small" AutoItemsPerPage="true">
+        <ChildContent>
+            <PropertyColumn Title="Buchungsdatum" Width="170px" Property="@(p => p.BookingDate)" Format="dd.MM.yyyy" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Descending"/>
+            <PropertyColumn Title="Valutadatum" Width="170px" Property="@(p => p.ValueDate)" Format="dd.MM.yyyy" Sortable="true"/>
+            <PropertyColumn Title="Text" Property="@(p => p.Text)"/>
+            <PropertyColumn Title="Betrag" Width="150px" Property="@(p => p.Value)" Format="C2" Align="Align.End"/>
+        </ChildContent>
+        <EmptyContent>
+            <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalAlignment="HorizontalAlignment.Center" HorizontalGap="10">
+                <FluentIcon Value="@(new Icons.Filled.Size24.Crown())" Color="@Color.Accent"/>
+                <div>Keine Daten vorhanden!</div>
+            </FluentStack>
+        </EmptyContent>
+    </FluentDataGrid>
+</div>

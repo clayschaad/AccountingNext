@@ -4,16 +4,14 @@
 <FluentPaginator State="@pagination" />
 
 <div id="datagrid-container">
-
-        <FluentDataGrid Items="@TransactionList" Pagination="@pagination"  RowSize="@rowSize" AutoItemsPerPage="true" Style="overflow-y:hidden;">
-                <PropertyColumn Title="Buchungsdatum" Width="100" Property="@(p => p.BookingDate)" Format="dd.MM.yyyy" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Descending" />
-                <PropertyColumn Title="Valutadatum" Width="100" Property="@(p => p.ValueDate)" Format="dd.MM.yyyy" Sortable="true" />
+        <FluentDataGrid Items="@TransactionList" Pagination="@pagination"  RowSize="DataGridRowSize.Small" AutoItemsPerPage="true" Style="overflow-y:hidden;">
+                <PropertyColumn Title="Buchungsdatum" Width="170px" Property="@(p => p.BookingDate)" Format="dd.MM.yyyy" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Descending" />
+                <PropertyColumn Title="Valutadatum" Width="170px" Property="@(p => p.ValueDate)" Format="dd.MM.yyyy" Sortable="true" />
                 <PropertyColumn Title="Text" Property="@(p => p.Text)" />
-                <PropertyColumn Title="Betrag" Width="100" Property="@(p => p.Value)" Format="C2" Align="Align.End"/>
+                <PropertyColumn Title="Betrag" Width="150px" Property="@(p => p.Value)" Format="C2" Align="Align.End"/>
         </FluentDataGrid>
 </div>
 
 @code {
-        DataGridRowSize rowSize = DataGridRowSize.Small;
         PaginationState pagination = new PaginationState() { ItemsPerPage = 10 };
 }
