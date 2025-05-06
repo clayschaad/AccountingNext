@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.Extensions.Options;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Schaad.Accounting.Datasets;
@@ -41,6 +42,11 @@ namespace Schaad.Accounting.UI
             app.MapStaticAssets();
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode();
+            
+            var culture = new CultureInfo("de-CH");
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
+            
             app.Run();
         }
     }
