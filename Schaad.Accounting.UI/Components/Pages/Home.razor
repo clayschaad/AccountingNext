@@ -1,4 +1,5 @@
 ﻿@page "/"
+
 @rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
@@ -26,19 +27,53 @@
     Cancel
 </FluentButton>
 
-<div id="datagrid-container">
-    <FluentDataGrid Items="@bankTransactionsQueryable" RowSize="DataGridRowSize.Small" AutoItemsPerPage="true">
-        <ChildContent>
-            <PropertyColumn Title="Buchungsdatum" Width="170px" Property="@(p => p.BookingDate)" Format="dd.MM.yyyy" Sortable="true" IsDefaultSortColumn="true" InitialSortDirection="SortDirection.Descending"/>
-            <PropertyColumn Title="Valutadatum" Width="170px" Property="@(p => p.ValueDate)" Format="dd.MM.yyyy" Sortable="true"/>
-            <PropertyColumn Title="Text" Property="@(p => p.Text)"/>
-            <PropertyColumn Title="Betrag" Width="150px" Property="@(p => p.Value)" Format="C2" Align="Align.End"/>
-        </ChildContent>
-        <EmptyContent>
-            <FluentStack Orientation="Orientation.Horizontal" VerticalAlignment="VerticalAlignment.Center" HorizontalAlignment="HorizontalAlignment.Center" HorizontalGap="10">
-                <FluentIcon Value="@(new Icons.Filled.Size24.Crown())" Color="@Color.Accent"/>
-                <div>Keine Daten vorhanden!</div>
-            </FluentStack>
-        </EmptyContent>
-    </FluentDataGrid>
-</div>
+<table>
+    <thead>
+    <tr>
+        <th>Buchungsdatum</th>
+        <th>Valutadatum</th>
+        <th>Text</th>
+        <th>Betrag</th>
+        <th>Konto</th>
+        <th>Zusatzinfo</th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var transaction in matchingBankTransactions)
+    {
+        <tr>
+            <td><div>@transaction.BookingDate.ToString("dd.MM.yyyy")</div></td>
+            <td><div>@transaction.ValueDate.ToString("dd.MM.yyyy")</div></td>
+            <td>
+                <div class="text-column">
+                    <input list="texts" @bind="@transaction.Text" placeholder="Type or select..." />
+                    <datalist id="texts">
+                        @foreach (var text in bookingTexts.OrderBy(t => t))
+                        {
+                            <option value="@text"></option>
+                        }
+                    </datalist>
+                </div>
+            </td>
+            <td class="betrag-column">
+                <div>@transaction.Value.ToFormattedString()</div>
+            </td>
+            <td>
+                <select @bind="@transaction.TargetAccountId">
+                    @foreach (var account in accounts.OrderBy(a=> a.Number).ThenBy(a => a.Name))
+                    {
+                        <option value="@account.Id">@($"{account.Number} / {@account.Name}")</option>
+                    }
+                </select>
+            </td>
+            <td class="zusatzinfo-column" title="@transaction.BankTransactionText">
+                <div>@transaction.BankTransactionText</div>
+            </td>
+            <td style="align-content: center"><FluentButton IconEnd="@(new Icons.Regular.Size16.SplitVertical())" Appearance="Appearance.Neutral" OnClick="@(() => SplitBankTransactionAsync(transaction))"/></td>
+            <td style="align-content: center"><FluentButton IconEnd="@(new Icons.Regular.Size16.Save())" Appearance="Appearance.Neutral" OnClick="@(() => BookBankTransactionAsync(transaction))"/></td>
+        </tr>
+    }
+    </tbody>
+</table>

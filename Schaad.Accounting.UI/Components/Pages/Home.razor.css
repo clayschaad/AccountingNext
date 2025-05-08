@@ -1,0 +1,42 @@
+﻿table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    padding-right: 10px;
+}
+
+th, td {
+    padding: 4px 4px;
+    vertical-align: middle;
+    overflow: hidden;
+    border: 1px solid #ccc;
+}
+
+th {
+    background-color: #f8f8f8;
+}
+
+th:nth-child(1), td:nth-child(1) { width: 120px; }  /* Buchungsdatum */
+th:nth-child(2), td:nth-child(2) { width: 120px; }  /* Valutadatum */
+th:nth-child(3), td:nth-child(3) { width: 240px; }  /* Text */
+th:nth-child(4), td:nth-child(4) { width: 100px; text-align: right; }  /* Betrag */
+th:nth-child(5), td:nth-child(5) { width: 300px; }  /* Konto */
+th:nth-child(7), td:nth-child(7),
+th:nth-child(8), td:nth-child(8) { width: 40px; text-align: center; }  /* Buttons */
+
+.text-column input {
+    width: 100%;
+    box-sizing: border-box; /* Ensures padding/border doesn't overflow */
+}
+
+.zusatzinfo-column div {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+.betrag-column {
+    text-align: right;
+    white-space: nowrap;
+}

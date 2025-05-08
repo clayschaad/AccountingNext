@@ -1,8 +1,8 @@
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
-using Schaad.Accounting.Common.Extensions;
 using Schaad.Accounting.Datasets;
 using Schaad.Accounting.Interfaces;
 using Schaad.Finance.Api;
@@ -133,18 +133,25 @@ namespace Schaad.Accounting.Services
 
                 if (trx.OriginAccountId == accountId)
                 {
-                    debit = trx.Value.ToFormattedString();
+                    debit = ToFormattedString(trx.Value);
                     trx.Value *= -1;
                 }
                 else
                 {
-                    credit = trx.Value.ToFormattedString();
+                    credit = ToFormattedString(trx.Value);
                 }
                 balance += trx.Value;
-                sb.AppendLine($"{trx.BookingDate:dd.MM.yyyy};{trx.ValueDate:dd.MM.yyyy};{trx.Text};{debit};{credit};{balance.ToFormattedString()}");
+                sb.AppendLine($"{trx.BookingDate:dd.MM.yyyy};{trx.ValueDate:dd.MM.yyyy};{trx.Text};{debit};{credit};{ToFormattedString(balance)}");
             }
             var fileBytes = Encoding.GetEncoding("ISO-8859-1").GetBytes(sb.ToString());
             return fileBytes;
+        }
+        
+        private string ToFormattedString(decimal value)
+        {
+            var culture = new CultureInfo("de-CH");
+            culture.NumberFormat.NumberGroupSeparator = "'";
+            return value.ToString("#,0.00", culture);
         }
     }
 }

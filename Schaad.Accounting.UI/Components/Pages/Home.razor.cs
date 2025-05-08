@@ -1,4 +1,5 @@
-﻿using System.IO.Compression;
+﻿using System.Diagnostics;
+using System.IO.Compression;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Schaad.Accounting.Datasets;
@@ -24,17 +25,33 @@ public partial class Home : ComponentBase
     [Inject]
     private IFileService fileService { get; set; } = null!;
     
-    private IQueryable<BankTransaction>? bankTransactionsQueryable;
+    [Inject]
+    private IBookingTextRepository bookingTextRepository { get; set; } = null!;
+    
+    [Inject]
+    private ITransactionRepository transactionRepository { get; set; } = null!;
+    
+    private List<Transaction>? matchingBankTransactions;
+    private IReadOnlyList<Account> accounts = [];
+    private IReadOnlyList<string> bookingTexts = [];
     
     FluentInputFile? myFileByBuffer;
     int? progressPercent;
     string? progressTitle;
     bool IsCanceled;
     Dictionary<int, string> Files = new();
-    
+
+    private bool loaded;
+
     protected override Task OnInitializedAsync()
     {
-        bankTransactionsQueryable = viewService.GetOpenBankTransactionList().AsQueryable();  
+        if (loaded == false) {
+            matchingBankTransactions = viewService.MatchOpenBankTransactions();
+            accounts = viewService.GetAccountViewList();
+            bookingTexts = bookingTextRepository.GetBookingTextList().Select(b => b.Text).ToArray();
+            loaded = true;
+        }
+
         return base.OnInitializedAsync();  
     }
     
@@ -82,7 +99,7 @@ public partial class Home : ComponentBase
             File.Delete(file.Value);
         }
         
-        bankTransactionsQueryable = viewService.GetOpenBankTransactionList().AsQueryable();
+        matchingBankTransactions = viewService.MatchOpenBankTransactions();
     }
 
     private async Task ImportXmlAndShowResultAsync(string fileName)
@@ -133,5 +150,23 @@ public partial class Home : ComponentBase
     private void ShowToast(string message, ToastIntent intent)
     {
         toastService.ShowToast(intent, message, 3000);
+    }
+
+    private async Task BookBankTransactionAsync(Transaction transaction)
+    {
+        if (string.IsNullOrEmpty(transaction.Text) || string.IsNullOrEmpty(transaction.TargetAccountId))
+        {
+            ShowToast("Transaktion kann wegen fehlenden Daten nicht gespeichert werden!", ToastIntent.Error);
+            return;
+        }
+        transactionRepository.SaveTransaction(transaction);
+        matchingBankTransactions!.RemoveAll(q => q == transaction);
+        await Task.CompletedTask;
+    }
+    
+    private async Task SplitBankTransactionAsync(Transaction transaction)
+    {
+        ShowToast("Split noch nicht implementiert!", ToastIntent.Warning);
+        await Task.CompletedTask;
     }
 }
