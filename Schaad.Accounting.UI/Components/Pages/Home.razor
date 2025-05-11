@@ -27,53 +27,63 @@
     Cancel
 </FluentButton>
 
-<table>
-    <thead>
-    <tr>
-        <th>Buchungsdatum</th>
-        <th>Valutadatum</th>
-        <th>Text</th>
-        <th>Betrag</th>
-        <th>Konto</th>
-        <th>Zusatzinfo</th>
-        <th></th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var transaction in matchingBankTransactions)
-    {
+@if (matchingBankTransactions == null || matchingBankTransactions.Count == 0)
+{
+    <p>Keine Transaktionen vorhanden!</p>
+}
+else
+{
+    <table>
+        <thead>
         <tr>
-            <td><div>@transaction.BookingDate.ToString("dd.MM.yyyy")</div></td>
-            <td><div>@transaction.ValueDate.ToString("dd.MM.yyyy")</div></td>
-            <td>
-                <div class="text-column">
-                    <input list="texts" @bind="@transaction.Text" placeholder="Type or select..." />
-                    <datalist id="texts">
-                        @foreach (var text in bookingTexts.OrderBy(t => t))
-                        {
-                            <option value="@text"></option>
-                        }
-                    </datalist>
-                </div>
-            </td>
-            <td class="betrag-column">
-                <div>@transaction.Value.ToFormattedString()</div>
-            </td>
-            <td>
-                <select @bind="@transaction.TargetAccountId">
-                    @foreach (var account in accounts.OrderBy(a=> a.Number).ThenBy(a => a.Name))
-                    {
-                        <option value="@account.Id">@($"{account.Number} / {@account.Name}")</option>
-                    }
-                </select>
-            </td>
-            <td class="zusatzinfo-column" title="@transaction.BankTransactionText">
-                <div>@transaction.BankTransactionText</div>
-            </td>
-            <td style="align-content: center"><FluentButton IconEnd="@(new Icons.Regular.Size16.SplitVertical())" Appearance="Appearance.Neutral" OnClick="@(() => SplitBankTransactionAsync(transaction))"/></td>
-            <td style="align-content: center"><FluentButton IconEnd="@(new Icons.Regular.Size16.Save())" Appearance="Appearance.Neutral" OnClick="@(() => BookBankTransactionAsync(transaction))"/></td>
+            <th>Buchungsdatum</th>
+            <th>Valutadatum</th>
+            <th>Text</th>
+            <th>Betrag</th>
+            <th>Konto</th>
+            <th>Zusatzinfo</th>
+            <th></th>
+            <th></th>
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+        @foreach (var transaction in matchingBankTransactions)
+        {
+            <tr>
+                <td>
+                    <div>@transaction.BookingDate.ToString("dd.MM.yyyy")</div></td>
+                <td>
+                    <div>@transaction.ValueDate.ToString("dd.MM.yyyy")</div></td>
+                <td>
+                    <div class="text-column">
+                        <input list="texts" @bind="@transaction.Text" placeholder="Type or select..."/>
+                        <datalist id="texts">
+                            @foreach (var text in bookingTexts.OrderBy(t => t))
+                            {
+                                <option value="@text"></option>
+                            }
+                        </datalist>
+                    </div>
+                </td>
+                <td class="betrag-column">
+                    <div>@transaction.Value.ToFormattedString()</div>
+                </td>
+                <td>
+                    <select @bind="@transaction.TargetAccountId">
+                        <option value=""></option>
+                        @foreach (var account in accounts.OrderBy(a => a.Number).ThenBy(a => a.Name))
+                        {
+                            <option value="@account.Id">@($"{account.Number} / {@account.Name}")</option>
+                        }
+                    </select>
+                </td>
+                <td class="zusatzinfo-column" title="@transaction.BankTransactionText">
+                    <div>@transaction.BankTransactionText</div>
+                </td>
+                <td style="align-content: center"><FluentButton IconEnd="@(new Icons.Regular.Size16.SplitVertical())" Appearance="Appearance.Neutral" OnClick="@(() => SplitBankTransactionAsync(transaction))"/></td>
+                <td style="align-content: center"><FluentButton IconEnd="@(new Icons.Regular.Size16.Save())" Appearance="Appearance.Neutral" OnClick="@(() => BookBankTransactionAsync(transaction))"/></td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}
