@@ -1,0 +1,83 @@
+﻿@implements IDialogContentComponent<Transaction>
+@rendermode InteractiveServer
+
+<FluentDialogHeader ShowDismiss="true">
+    <FluentStack VerticalAlignment="VerticalAlignment.Center">
+        <FluentIcon Value="@(new Icons.Regular.Size24.WindowApps())"/>
+        <FluentLabel Typo="Typography.PaneHeader">
+            @Dialog.Instance.Parameters.Title
+        </FluentLabel>
+    </FluentStack>
+</FluentDialogHeader>
+
+<FluentDialogBody>
+    Total: @Math.Abs(Content.Value) / Rest: @openAmount
+    <FluentButton Appearance="Appearance.Neutral" IconEnd="@(new Icons.Regular.Size24.Add())"
+                  OnClick="@AddTransactionAsync">
+        Transaktion hinzufügen
+    </FluentButton>
+    <EditForm EditContext="@editContext">
+        <DataAnnotationsValidator/>
+
+        <table>
+            <thead>
+            <tr>
+                <th>Datum</th>
+                <th>Betrag</th>
+                <th>Text</th>
+                <th>Konto</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var transaction in transactionList)
+            {
+                <tr>
+                    <td>
+                        <div>@transaction.ValueDate.ToString("dd.MM.yyyy")</div>
+                    </td>
+                    <td>
+                        <div>
+                            <InputNumber @bind-Value="@transaction.Value" @onblur="CalculateOpenAmount"/>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="text-column">
+                            <input list="texts" @bind="@transaction.Text" placeholder="Type or select..."/>
+                            <datalist id="texts">
+                                @foreach (var text in bookingTexts.OrderBy(t => t))
+                                {
+                                    <option value="@text"></option>
+                                }
+                            </datalist>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="account-column">
+                            <AccountSelector Accounts="accounts" @bind-AccountId="@transaction.TargetAccountId" />
+                        </div>
+                    </td>
+                    <td style="align-content: center">
+                        <FluentButton IconEnd="@(new Icons.Regular.Size16.Delete())" Appearance="Appearance.Neutral"
+                                      OnClick="@(() => transactionList.Remove(transaction))"/>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+        <div>
+            <FluentValidationSummary/>
+        </div>
+    </EditForm>
+</FluentDialogBody>
+
+<FluentDialogFooter>
+    <FluentButton Appearance="Appearance.Neutral"
+                  OnClick="@CancelAsync">
+        Abbrechen
+    </FluentButton>
+    <FluentButton Appearance="Appearance.Accent" Disabled="@(openAmount != 0)"
+                  OnClick="@SaveAsync">
+        Speichern
+    </FluentButton>
+</FluentDialogFooter>

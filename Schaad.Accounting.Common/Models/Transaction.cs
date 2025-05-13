@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Schaad.Accounting.Models
 {
-    public record Transaction
+    public class Transaction
     {
         public string Id { get; set; }
         public string BankTransactionId { get; set; }

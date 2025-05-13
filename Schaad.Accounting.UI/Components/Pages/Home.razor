@@ -12,18 +12,20 @@
                  MaximumFileSize="@(10 * 1024 * 1024)"
                  Accept=".zip, .xml"
                  OnProgressChange="@OnProgressChangeAsync"
-                 OnCompleted="@OnCompletedAsync" />
+                 OnCompleted="@OnCompletedAsync"/>
 
-<FluentProgress Visible="@(progressPercent > 0)" Min="0" Max="100" Value="@progressPercent" />
+<FluentProgress Visible="@(progressPercent > 0)" Min="0" Max="100" Value="@progressPercent"/>
 <FluentLabel Alignment="HorizontalAlignment.Center">
     @progressTitle
 </FluentLabel>
 
-<FluentButton Appearance="Appearance.Lightweight" IconStart="@(new Icons.Regular.Size16.ArrowUpload())" Id="MyUploadBuffer">
+<FluentButton Appearance="Appearance.Lightweight" IconStart="@(new Icons.Regular.Size16.ArrowUpload())"
+              Id="MyUploadBuffer">
     Upload files
 </FluentButton>
 
-<FluentButton Appearance="Appearance.Lightweight" IconStart="@(new Icons.Regular.Size16.Dismiss())" @onclick="@((e) => IsCanceled = true)">
+<FluentButton Appearance="Appearance.Lightweight" IconStart="@(new Icons.Regular.Size16.Dismiss())"
+              @onclick="@((e) => IsCanceled = true)">
     Cancel
 </FluentButton>
 
@@ -38,10 +40,10 @@ else
         <tr>
             <th>Buchungsdatum</th>
             <th>Valutadatum</th>
-            <th>Text</th>
             <th>Betrag</th>
-            <th>Konto</th>
             <th>Zusatzinfo</th>
+            <th>Text</th>
+            <th>Konto</th>
             <th></th>
             <th></th>
         </tr>
@@ -51,9 +53,17 @@ else
         {
             <tr>
                 <td>
-                    <div>@transaction.BookingDate.ToString("dd.MM.yyyy")</div></td>
+                    <div>@transaction.BookingDate.ToString("dd.MM.yyyy")</div>
+                </td>
                 <td>
-                    <div>@transaction.ValueDate.ToString("dd.MM.yyyy")</div></td>
+                    <div>@transaction.ValueDate.ToString("dd.MM.yyyy")</div>
+                </td>
+                <td class="betrag-column">
+                    <div>@Math.Abs(transaction.Value).ToFormattedString()</div>
+                </td>
+                <td class="zusatzinfo-column" title="@transaction.BankTransactionText">
+                    <div>@transaction.BankTransactionText</div>
+                </td>
                 <td>
                     <div class="text-column">
                         <input list="texts" @bind="@transaction.Text" placeholder="Type or select..."/>
@@ -65,23 +75,24 @@ else
                         </datalist>
                     </div>
                 </td>
-                <td class="betrag-column">
-                    <div>@transaction.Value.ToFormattedString()</div>
-                </td>
                 <td>
-                    <select @bind="@transaction.TargetAccountId">
-                        <option value=""></option>
-                        @foreach (var account in accounts.OrderBy(a => a.Number).ThenBy(a => a.Name))
-                        {
-                            <option value="@account.Id">@($"{account.Number} / {@account.Name}")</option>
-                        }
-                    </select>
+                    @if (transaction.Value > 0)
+                    {
+                        <AccountSelector Accounts="accounts" @bind-AccountId="@transaction.OriginAccountId" />
+                    }
+                    else
+                    {
+                        <AccountSelector Accounts="accounts" @bind-AccountId="@transaction.TargetAccountId" />
+                    }
                 </td>
-                <td class="zusatzinfo-column" title="@transaction.BankTransactionText">
-                    <div>@transaction.BankTransactionText</div>
+                <td style="align-content: center">
+                    <FluentButton IconEnd="@(new Icons.Regular.Size16.SplitVertical())" Appearance="Appearance.Neutral"
+                                  OnClick="@(() => SplitBankTransactionAsync(transaction))" Disabled="@(transaction.Value > 0)"/>
                 </td>
-                <td style="align-content: center"><FluentButton IconEnd="@(new Icons.Regular.Size16.SplitVertical())" Appearance="Appearance.Neutral" OnClick="@(() => SplitBankTransactionAsync(transaction))"/></td>
-                <td style="align-content: center"><FluentButton IconEnd="@(new Icons.Regular.Size16.Save())" Appearance="Appearance.Neutral" OnClick="@(() => BookBankTransactionAsync(transaction))"/></td>
+                <td style="align-content: center">
+                    <FluentButton IconEnd="@(new Icons.Regular.Size16.Save())" Appearance="Appearance.Neutral"
+                                  OnClick="@(() => BookBankTransactionAsync(transaction))"/>
+                </td>
             </tr>
         }
         </tbody>

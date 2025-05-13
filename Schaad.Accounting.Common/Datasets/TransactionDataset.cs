@@ -3,7 +3,7 @@ using Schaad.Accounting.Models;
 
 namespace Schaad.Accounting.Datasets
 {
-    public record TransactionDataset : Transaction
+    public class TransactionDataset : Transaction
     {
         public Account OriginAccount { get; set; }
 

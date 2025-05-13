@@ -30,6 +30,8 @@ namespace Schaad.Accounting.Repositories
         /// </summary>
         public void SaveTransaction(Transaction transaction)
         {
+            transaction.Value = Math.Abs(transaction.Value);
+            
             // prevent saving fxrate for chf account
             var isFxAccount = accountRepository.GetAccount(transaction.OriginAccountId).IsFxAccount;
 

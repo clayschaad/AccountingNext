@@ -5,6 +5,7 @@ using Microsoft.FluentUI.AspNetCore.Components;
 using Schaad.Accounting.Datasets;
 using Schaad.Accounting.Interfaces;
 using Schaad.Accounting.Models;
+using Schaad.Accounting.UI.Components.Pages.Dialogs;
 
 namespace Schaad.Accounting.UI.Components.Pages;
 
@@ -18,6 +19,9 @@ public partial class Home : ComponentBase
     
     [Inject]
     private IMessageService messageService { get; set; } = null!;
+    
+    [Inject]
+    private IDialogService dialogService { get; set; } = null!;
     
     [Inject]
     private ISettingsService settingsService { get; set; } = null!;
@@ -166,7 +170,20 @@ public partial class Home : ComponentBase
     
     private async Task SplitBankTransactionAsync(Transaction transaction)
     {
-        ShowToast("Split noch nicht implementiert!", ToastIntent.Warning);
-        await Task.CompletedTask;
+        var dialog = await dialogService.ShowDialogAsync<TransactionSplitDialog>(transaction, new DialogParameters()
+        {
+            Height = "500px",
+            Width = "800px",
+            Title = "Split Transaktion",
+            PreventDismissOnOverlayClick = true,
+            PreventScroll = true,
+        });
+
+        var result = await dialog.Result;
+        if (!result.Cancelled && result.Data != null)
+        {
+            matchingBankTransactions!.RemoveAll(q => q == transaction);
+            await Task.CompletedTask;
+        }
     }
 }

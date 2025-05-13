@@ -1,0 +1,7 @@
+﻿<select @bind="@AccountId" @oninput="OnInputChanged">
+    <option value=""></option>
+    @foreach (var account in Accounts.OrderBy(a => a.Number).ThenBy(a => a.Name))
+    {
+        <option value="@account.Id">@($"{account.Number} / {account.Name}")</option>
+    }
+</select>

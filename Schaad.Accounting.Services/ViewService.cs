@@ -169,7 +169,7 @@ namespace Schaad.Accounting.Services
                 
                 if (account.Class == ClassIds.Activa && accountId == t.OriginAccountId )
                 {
-                    return t with { Value = -t.Value };
+                    t.Value *= -1;
                 }
     
                 return t;
