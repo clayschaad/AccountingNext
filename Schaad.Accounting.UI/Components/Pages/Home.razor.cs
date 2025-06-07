@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO.Compression;
+﻿using System.IO.Compression;
 using Microsoft.AspNetCore.Components;
 using Microsoft.FluentUI.AspNetCore.Components;
 using Schaad.Accounting.Datasets;
@@ -34,6 +33,9 @@ public partial class Home : ComponentBase
     
     [Inject]
     private ITransactionRepository transactionRepository { get; set; } = null!;
+
+    [Inject] 
+    private NavigationManager Navigation { get; set; } = null!;
     
     private List<Transaction>? matchingBankTransactions;
     private IReadOnlyList<Account> accounts = [];
@@ -138,7 +140,7 @@ public partial class Home : ComponentBase
         }
         else if (message.Status == MessageStatus.Warning)
         {
-            ShowToast(text, ToastIntent.Warning);
+            await ShowMessageAsync(text, MessageIntent.Warning);
         }
         else if (message.Status == MessageStatus.Error)
         {
@@ -164,7 +166,7 @@ public partial class Home : ComponentBase
             return;
         }
         transactionRepository.SaveTransaction(transaction);
-        matchingBankTransactions = viewService.MatchOpenBankTransactions();
+        ReloadPage();
         await Task.CompletedTask;
     }
     
@@ -182,8 +184,14 @@ public partial class Home : ComponentBase
         var result = await dialog.Result;
         if (!result.Cancelled && result.Data != null)
         {
-            matchingBankTransactions!.RemoveAll(q => q == transaction);
+            ReloadPage();
             await Task.CompletedTask;
         }
+    }
+    
+    private void ReloadPage()
+    {
+        var uri = Navigation.Uri;
+        Navigation.NavigateTo(uri, forceLoad: true); // forceLoad = true does a full reload
     }
 }
