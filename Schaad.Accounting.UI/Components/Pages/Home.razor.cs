@@ -164,7 +164,7 @@ public partial class Home : ComponentBase
             return;
         }
         transactionRepository.SaveTransaction(transaction);
-        matchingBankTransactions!.RemoveAll(q => q == transaction);
+        matchingBankTransactions = viewService.MatchOpenBankTransactions();
         await Task.CompletedTask;
     }
     
